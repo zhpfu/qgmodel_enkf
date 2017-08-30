@@ -1,0 +1,10 @@
+&enkf_param
+ kmax=63
+ nz=2
+ nens=40
+ ob_thin=2
+ krange=3,8,20
+ localize_opt=1
+ localize_cutoff=20,10,3
+ debug=T
+/
