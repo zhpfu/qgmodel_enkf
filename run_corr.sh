@@ -10,8 +10,8 @@
 source /glade/u/apps/opt/lmod/4.2.1/init/bash
 source ~/.bashrc
 
-nens=40
-expname=highres1
+nens=32
+expname=ctrl
 casename=noda
 
 matlab -nodesktop -nosplash -nodisplay -r "nens=$nens; expname='$expname'; casename='$casename'; corr_map; exit" 

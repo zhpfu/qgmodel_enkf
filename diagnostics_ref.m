@@ -45,9 +45,9 @@ end
 	%out(:,:,1,:)=squeeze(mean(u1,3));
 	%out(:,:,2,:)=obsu;
 	%out(:,:,3,:)=ut;
-  %system(['mkdir -p ' workdir '/out/' expname]);
-	%system(['rm -f ' workdir '/out/' expname '/noda.nc']);
-	%nc_write([workdir '/out/' expname '/noda.nc'],'var',{'x','y','z','case','t'},out);
+	%system(['mkdir -p ' workdir '/' expname]);
+	%system(['rm -f ' workdir '/' expname '/noda.nc']);
+	%nc_write([workdir '/' expname '/noda.nc'],'var',{'x','y','z','case','t'},out);
 
 %error spectra
 [w ref]=KEspec(ut,vt);

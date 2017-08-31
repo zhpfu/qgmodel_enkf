@@ -1,25 +1,22 @@
 addpath /glade/p/work/mying/qgmodel_enkf/util
-addpath /glade/p/work/mying/qgmodel_enkf/enkf
-addpath /glade/p/work/mying/graphics
+addpath /glade/p/work/mying/qgmodel_enkf/enkf_matlab
 workdir='/glade/scratch/mying/qgmodel_enkf';
 
 close all
-colormap(colormap_ncl('/glade/p/work/mying/graphics/colormap/BlWhRe.rgb',41))
-
 getparams([workdir '/' expname '/truth']);
 
 thin=4;
-n1=1; nt=10;
+n1=1; nt=120;
 lv=1;
 krange=[1]; %[6 12 25]; %[1 4 10 32];
 
-for n=1:nt-n1+1
+for n=1:10:nt-n1+1
 disp(n)
 
 for m=1:nens
 	psik=read_field([workdir '/' expname '/' casename '/' sprintf('%4.4i',m) '/f_' sprintf('%5.5i',n+n1-1)],nkx,nky,nz,1);
 	prior(:,:,:,m)=spec2grid(psik);
-	prior1(:,:,:,m)=spec2grid(psi2u(psik));
+	prior1(:,:,:,m)=spec2grid(psi2temp(psik));
 end
 prior(:,:,:,nens+1)=mean(prior(:,:,:,1:nens),4);
 prior1(:,:,:,nens+1)=mean(prior1(:,:,:,1:nens),4);
