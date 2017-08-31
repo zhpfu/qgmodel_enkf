@@ -4,7 +4,7 @@ addpath util;
 rng('shuffle');
 pi=4.0*atan(1.0);
 
-kmax=199; nz=2;
+kmax=63; nz=2;
 nkx=2*kmax+1;
 nky=kmax+1;
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export CONFIG=/glade/p/work/mying/qgmodel_enkf/config/N10_thin4_se/noda
+export CONFIG=/glade/p/work/mying/qgmodel_enkf/config/ctrl/noda
 . $CONFIG
 
 mkdir -p $workdir/$casename
@@ -16,9 +16,7 @@ if [ ! -f current_cycle ]; then
 		mkdir -p $mid
 		cd $mid 
 			cp $workdir/initial_condition.bin input.bin
-			#$homedir/add_perturb.sh input perturb 5 50 0.5
-			$homedir/add_perturb.sh input perturb 10 50 0.8
-			#$homedir/add_gaussnoise.sh input perturb 0.01
+			$homedir/add_perturb.sh input perturb 0.01 -1
 			mv perturb.bin f_00001.bin
 		cd ..
 	done 
