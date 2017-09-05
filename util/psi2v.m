@@ -1,4 +1,4 @@
-function vk=psi2uv(psik);
+function vk=psi2v(psik);
 
 kmax = size(psik,2)-1; nz=size(psik,3);
 
