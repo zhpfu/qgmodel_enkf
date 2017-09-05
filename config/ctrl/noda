@@ -21,21 +21,21 @@ bot_drag=0.5
 frame_per_cycle=20
 spinup_cycle=0
 obs_interval=1
-num_cycle=1000
+num_cycle=5000
 
 run_enkf=false
 nens=32
-obs_err=2
-obs_thin=1
-obs_type=5
+obs_err=4.5
+obs_thin=2
+obs_type=1,2
 state_type=3
-localize=0
+localize=1
 localize_cutoff=0
 krange=1
 find_roi=1
-relax_opt=1
-relax_adapt=F
-relax_coef=0
+relax_opt=2
+relax_adapt=T
+relax_coef=0.5
 
 casename=noda
 

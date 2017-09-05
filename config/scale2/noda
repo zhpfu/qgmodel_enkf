@@ -4,37 +4,38 @@ workdir=/glade/scratch/mying/qgmodel_enkf/scale2
 codedir=$homedir/model/qg
 qgexe=qg.exe
 
-kmax=49
+kmax=63
 nz=2
 dt=0.0005
 F=400
-beta=128
+beta=16
 strat_type=linear
 ubar_type=linear
-uscale=0.22
+uscale=0.5
 filter_type=exp_cutoff
 filter_exp=8
 filt_tune=1
-k_cut=33
-bot_drag=0.2
+k_cut=40
+bot_drag=9
 
-frame_per_cycle=200
+frame_per_cycle=20
 spinup_cycle=0
 obs_interval=1
 num_cycle=500
 
 run_enkf=false
-nens=40
-obs_err=2
+nens=256
+obs_err=4.5
 obs_thin=2
 obs_type=1,2
-localize=0
-localize_cutoff=16
+state_type=3
+localize=1
+localize_cutoff=0
 krange=1
 find_roi=1
-relax_opt=1
-relax_adapt=F
-relax_coef=0
+relax_opt=2
+relax_adapt=T
+relax_coef=0.5
 
 casename=noda
 

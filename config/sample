@@ -24,11 +24,18 @@ obs_interval=1
 num_cycle=500
 
 run_enkf=false
-nens=40
-obs_err=2
-obs_thin=2
+nens=32
+obs_err=4.5
+obs_thin=1
+obs_type=5
+state_type=3
 localize=0
-localize_cutoff=16
+localize_cutoff=0
+krange=1
+find_roi=1
+relax_opt=1
+relax_adapt=F
+relax_coef=0
 
 casename=sample
 

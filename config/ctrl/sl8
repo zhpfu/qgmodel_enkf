@@ -19,15 +19,15 @@ k_cut=40
 bot_drag=0.5
 
 frame_per_cycle=20
-spinup_cycle=30
+spinup_cycle=50
 obs_interval=10
-num_cycle=300
+num_cycle=1000
 
 run_enkf=true
 nens=32
-obs_err=2
+obs_err=4.5
 obs_thin=2
-obs_type=5
+obs_type=1,2
 state_type=3
 localize=1
 localize_cutoff=8
