@@ -8,18 +8,20 @@ function local_func(dist,roi,localize_opt) result(loc)
   real,dimension(size(dist,1),size(dist,2),size(dist,3)) :: r,loc
   integer :: roi
   real :: r1,r2
-  if(localize_opt.eq.0) then
-    loc=1.0
-  else
-    r1=real(roi)
-    r2=real(roi)/2
-    r=dist/r2
-    loc=0.0
-    where(dist>=r2 .and. dist<r1) &
-      loc=((((r/12 - 0.5)*r +0.625)*r +5.0/3)*r -5)*r +4-2.0/(3*r)
-    where(dist<r2) &
-      loc=(((-0.25*r +0.5)*r +0.625)*r-5.0/3)*(r**2)+1
-  end if
+  select case (localize_opt)
+    case (0) !no localization
+      loc=1.0
+    case (1) !GC function
+      r1=real(roi)
+      r2=real(roi)/2
+      r=dist/r2
+      loc=0.0
+      where(dist>=r2 .and. dist<r1) &
+        loc=((((r/12 - 0.5)*r +0.625)*r +5.0/3)*r -5)*r +4-2.0/(3*r)
+      where(dist<r2) &
+        loc=(((-0.25*r +0.5)*r +0.625)*r-5.0/3)*(r**2)+1
+    case (2)
+  end select
 end function local_func
 
 

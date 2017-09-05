@@ -44,14 +44,31 @@ end subroutine get_obs
 subroutine obs_interp(x,y,z,u,obs_x,obs_y,obs_z,hu)
   real,dimension(:,:,:) :: x,y,z
   real,dimension(:,:,:) :: u
-  real :: hu, obs_x,obs_y,obs_z
-  integer :: nx,ny,nz
+  real :: hu, obs_x,obs_y,obs_z, dx,dxm,dy,dym,dz,dzm
+  integer :: nx,ny,nz, x1,y1,z1
   nx=size(u,1)
   ny=size(u,2)
   nz=size(u,3)
 
-  hu=u(int(obs_x),int(obs_y),int(obs_z))
-  !no interpolation yet
+  !hu=u(int(obs_x),int(obs_y),int(obs_z))
+  !linear interpolation
+  x1=floor(obs_x); y1=floor(obs_y); z1=floor(obs_z)
+  x2=ceiling(obs_x); y2=ceiling(obs_y); z2=ceiling(obs_z)
+  dx1=obs_x-real(x1)
+  dx2=real(x2)-obs_x
+  dy1=obs_y-real(y1)
+  dy2=real(y2)-obs_y
+  dz1=obs_z-real(z1)
+  dz2=real(z2)-obs_z
+  hu=(1-dz1-dz2)*((1-dy1-dy2)*((1-dx1-dx2)*u(x1,y1,z1)+dx1*u(x2,y1,z1)+dx2*u(x1,y1,z1)) &
+                         +dy1*((1-dx1-dx2)*u(x1,y2,z1)+dx1*u(x2,y2,z1)+dx2*u(x1,y2,z1)) &
+                         +dy2*((1-dx1-dx2)*u(x1,y1,z1)+dx1*u(x2,y1,z1)+dx2*u(x1,y1,z1))) &
+            +dz1*((1-dy1-dy2)*((1-dx1-dx2)*u(x1,y1,z2)+dx1*u(x2,y1,z2)+dx2*u(x1,y1,z2)) &
+                         +dy1*((1-dx1-dx2)*u(x1,y2,z2)+dx1*u(x2,y2,z2)+dx2*u(x1,y2,z2)) &
+                         +dy2*((1-dx1-dx2)*u(x1,y1,z2)+dx1*u(x2,y1,z2)+dx2*u(x1,y1,z2))) &
+            +dz2*((1-dy1-dy2)*((1-dx1-dx2)*u(x1,y1,z1)+dx1*u(x2,y1,z1)+dx2*u(x1,y1,z1)) &
+                         +dy1*((1-dx1-dx2)*u(x1,y2,z1)+dx1*u(x2,y2,z1)+dx2*u(x1,y2,z1)) &
+                         +dy2*((1-dx1-dx2)*u(x1,y1,z1)+dx1*u(x2,y1,z1)+dx2*u(x1,y1,z1)))
 
 end subroutine obs_interp
 

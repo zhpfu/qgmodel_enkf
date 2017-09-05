@@ -88,8 +88,8 @@ program enkf
   call grid3d(real((/(i,i=1,nx)/)),real((/(i,i=1,ny)/)),real((/(i,i=1,nz)/)),x,y,z)
 
   call grid2d(real((/(i,i=-kmax,kmax)/)),real((/(j,j=0,kmax)/)),kx,ky)
-  where(kx==0) kx=1
-  where(ky==0) ky=1
+  !where(kx==0) kx=1
+  !where(ky==0) ky=1
 
   !read in observation file
   write(obfile,'(a,a,i5.5)') trim(obsdir),'/',nt
@@ -104,16 +104,16 @@ program enkf
       call read_field(infile,nkx,nky,nz,uspec)
       do k=1,nz
         hspec=dcmplx(uspec(:,:,k))
-        select case (state_type) !convert psi to state variable
-          case (1) !u
-            hspec=hspec*dcmplx(0.0,-ky)
-          case (2) !v
-            hspec=hspec*dcmplx(0.0,kx)
-          case (4) !zeta
-            hspec=hspec*dcmplx(-(kx**2+ky**2),0.0)
-          case (5) !temp
-            hspec=hspec*dcmplx(-sqrt(kx**2+ky**2),0.0)
-        end select
+        !select case (state_type) !convert psi to state variable
+          !case (1) !u
+            !hspec=hspec*dcmplx(0.0,-ky)
+          !case (2) !v
+            !hspec=hspec*dcmplx(0.0,kx)
+          !case (4) !zeta
+            !hspec=hspec*dcmplx(-(kx**2+ky**2),0.0)
+          !case (5) !temp
+            !hspec=hspec*dcmplx(-sqrt(kx**2+ky**2),0.0)
+        !end select
         spec=fullspec(hspec)
         spec=ifftshift(spec)
         u(:,:,k,m)=real(ifft2(spec))
@@ -158,16 +158,16 @@ program enkf
           spec=fft2(spec)/(nx*ny)
           spec=fftshift(spec)
           hspec=halfspec(spec)
-          select case (state_type)
-            case (1) !u
-              hspec=hspec/dcmplx(0.0,-ky)
-            case (2) !v
-              hspec=hspec/dcmplx(0.0,kx)
-            case (4) !zeta
-              hspec=hspec/dcmplx(-(kx**2+ky**2),0.0)
-            case (5) !temp
-              hspec=hspec/dcmplx(-sqrt(kx**2+ky**2),0.0)
-          end select
+          !select case (state_type)
+            !case (1) !u
+              !hspec=hspec/dcmplx(0.0,-ky)
+            !case (2) !v
+              !hspec=hspec/dcmplx(0.0,kx)
+            !case (4) !zeta
+              !hspec=hspec/dcmplx(-(kx**2+ky**2),0.0)
+            !case (5) !temp
+              !hspec=hspec/dcmplx(-sqrt(kx**2+ky**2),0.0)
+          !end select
           select case (obt(v))
             case (1)
               hspec=hspec*dcmplx(0.0,-ky)
@@ -220,10 +220,7 @@ program enkf
   end if
 
   !assimilation loop
-  do k=1,1 
-  do j=1,ny,ob_thin
-  do i=1,nx,ob_thin
-    p=(k-1)*nx*ny+(j-1)*ny+i
+  do p=1,nobs
 
     do v=1,nv !variable loop
 
@@ -251,18 +248,18 @@ program enkf
             spec=fft2(spec)/(nx*ny)
             spec=fftshift(spec)
             hspec=halfspec(spec)
-            select case (state_type)
-              case (1) !u
-                hspec=hspec/dcmplx(0.0,-ky)
-              case (2) !v
-                hspec=hspec/dcmplx(0.0,kx)
-              case (4) !zeta
-                hspec=hspec/dcmplx(-(kx**2+ky**2),0.0)
-              case (5) !temp
-                hspec=hspec/dcmplx(-sqrt(kx**2+ky**2),0.0)
-            end select
+            !select case (state_type)
+              !case (1) !u
+                !hspec=hspec/dcmplx(0.0,-ky)
+              !case (2) !v
+                !hspec=hspec/dcmplx(0.0,kx)
+              !case (4) !zeta
+                !hspec=hspec/dcmplx(-(kx**2+ky**2),0.0)
+              !case (5) !temp
+                !hspec=hspec/dcmplx(-sqrt(kx**2+ky**2),0.0)
+            !end select
             select case (obt(v))
-               case (1)
+              case (1)
                  hspec=hspec*dcmplx(0.0,-ky)
               case (2)
                  hspec=hspec*dcmplx(0.0,kx)
@@ -311,8 +308,6 @@ program enkf
       call separate_scales(um,kr,um_ms)
 
       do s=1,ns
-        loc=local_func(dist,roi(s),localize_opt)
-
         cova=0.0
         do m=1,nm
           ie=(m-1)*nprocs+proc_id+1
@@ -324,6 +319,8 @@ program enkf
         call MPI_Allreduce(cova,cova,nx*ny*nz,MPI_REAL8,MPI_SUM,comm,ierr)
         cova=cova/real(nens-1)
   
+        loc=local_func(dist,roi(s),localize_opt) !localization function
+
         !update members
         do m=1,nm
           ie=(m-1)*nprocs+proc_id+1
@@ -347,8 +344,6 @@ program enkf
 
     end do !variable loop
 
-  end do
-  end do
   end do !assimilation loop
 
   !posterior statistics in obs space
@@ -363,16 +358,16 @@ program enkf
           spec=fft2(spec)/(nx*ny)
           spec=fftshift(spec)
           hspec=halfspec(spec)
-          select case (state_type)
-            case (1) !u
-              hspec=hspec/dcmplx(0.0,-ky)
-            case (2) !v
-              hspec=hspec/dcmplx(0.0,kx)
-            case (4) !zeta
-              hspec=hspec/dcmplx(-(kx**2+ky**2),0.0)
-            case (5) !temp
-              hspec=hspec/dcmplx(-sqrt(kx**2+ky**2),0.0)
-          end select
+          !select case (state_type)
+            !case (1) !u
+              !hspec=hspec/dcmplx(0.0,-ky)
+            !case (2) !v
+              !hspec=hspec/dcmplx(0.0,kx)
+            !case (4) !zeta
+              !hspec=hspec/dcmplx(-(kx**2+ky**2),0.0)
+            !case (5) !temp
+              !hspec=hspec/dcmplx(-sqrt(kx**2+ky**2),0.0)
+          !end select
           select case (obt(v))
             case (1)
               hspec=hspec*dcmplx(0.0,-ky)
@@ -450,16 +445,16 @@ program enkf
         spec=dcmplx(u(:,:,k,m),0.0)
         spec=fft2(spec)/(nx*ny)
         hspec=halfspec(fftshift(spec))
-        select case (state_type) !convert state variable back to psi
-          case (1) !u
-            hspec=hspec/dcmplx(0.0,-ky)
-          case (2) !v
-            hspec=hspec/dcmplx(0.0,kx)
-          case (4) !zeta
-            hspec=hspec/dcmplx(-(kx**2+ky**2),0.0)
-          case (5) !temp
-            hspec=hspec/dcmplx(-sqrt(kx**2+ky**2),0.0)
-        end select
+        !select case (state_type) !convert state variable back to psi
+          !case (1) !u
+            !hspec=hspec/dcmplx(0.0,-ky)
+          !case (2) !v
+            !hspec=hspec/dcmplx(0.0,kx)
+          !case (4) !zeta
+            !hspec=hspec/dcmplx(-(kx**2+ky**2),0.0)
+          !case (5) !temp
+            !hspec=hspec/dcmplx(-sqrt(kx**2+ky**2),0.0)
+        !end select
         uspec(:,:,k)=cmplx(hspec)
       end do
       call write_field(outfile,nkx,nky,nz,uspec)
