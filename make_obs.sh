@@ -1,5 +1,5 @@
 #!/bin/bash
-export CONFIG=/glade/p/work/mying/qgmodel_enkf/config/test/noda
+export CONFIG=/glade/p/work/mying/qgmodel_enkf/config/ctrl/noda
 . $CONFIG
 
 nkx=`echo "$kmax*2+1" |bc`
@@ -12,7 +12,7 @@ obsdir=$workdir/obs
 mkdir -p $obsdir
 rm -f $obsdir/*
 
-n=5  #batch of obs run in matlab job
+n=20  #batch of obs run in matlab job
 for i in `seq 1 $n`; do
 
 nn=`echo "$num_cycle/$n" |bc`
@@ -35,7 +35,6 @@ for n=$n1:$n2
 
   r=${err_slope:-1};
   [kx,ky]=ndgrid(-$kmax:$kmax,0:$kmax);
-  kx(kx==0)=1; ky(ky==0)=1;
   kk=sqrt(kx.^2+ky.^2);
   noise=(kk.^((r-1)/2)).*exp(2*pi*sqrt(-1)*rand(2*$kmax+1,$kmax+1));
   norm=sum(sum(noise.*conj(noise)))*2;
@@ -64,7 +63,7 @@ for n=$n1:$n2
   for z=1
   for y=1:$ny
   for x=1:$nx
-    fprintf(f,'%5i %5i %3i %12.5f %12.5f %12.5f %12.5f %12.5f \n',x,y,z,...
+    fprintf(f,'%7.2f %7.2f %5.2f %12.5f %12.5f %12.5f %12.5f %12.5f \n',x,y,z,...
            u(x,y,z),v(x,y,z),psi(x,y,z),zeta(x,y,z),temp(x,y,z));
   end 
   end 
