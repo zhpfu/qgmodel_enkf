@@ -3,17 +3,14 @@ addpath /glade/p/work/mying/qgmodel_enkf/util
 addpath /glade/p/work/mying/graphics
 workdir='/glade/scratch/mying/qgmodel_enkf/';
 %expname='noda';
+%casename=['sl' num2str(2^(l+loff))];
 %nens=40;
 
 getparams([workdir '/' expname '/truth']);
 lv=1;
 
-%for l=1:5
-%casename=['sl' num2str(2^(l+loff))];
-
-for n=1:nt-n1+1
-n
-  nid=sprintf('%5.5i',n+n1-1);
+for n=1:floor((nt-n1)/dt)+1
+  nid=sprintf('%5.5i',n1+(n-1)*dt)
   psik=read_field([workdir '/' expname '/truth/' nid],nkx,nky,nz,1);
   ut(:,:,n)=spec2grid(psi2u(psik(:,:,lv)));
   vt(:,:,n)=spec2grid(psi2v(psik(:,:,lv)));
@@ -28,12 +25,12 @@ n
   end
 end
 
-	%out(:,:,1,:)=squeeze(mean(u1,3));
-	%out(:,:,2,:)=squeeze(mean(u2,3));
-	%out(:,:,3,:)=ut;
-	%system(['mkdir -p ' workdir '/out/' expname]);
-	%system(['rm -f ' workdir '/out/' expname '/' casename '.nc']);
-	%nc_write([workdir '/out/' expname '/' casename '.nc'],'var',{'x','y','case','t'},out);
+%out(:,:,1,:)=squeeze(mean(u1,3));
+%out(:,:,2,:)=squeeze(mean(u2,3));
+%out(:,:,3,:)=ut;
+%system(['mkdir -p ' workdir '/out/' expname]);
+%system(['rm -f ' workdir '/out/' expname '/' casename '.nc']);
+%nc_write([workdir '/out/' expname '/' casename '.nc'],'var',{'x','y','case','t'},out);
 
 %error spectra
 u1mean=mean(u1,3);
@@ -54,6 +51,4 @@ sprd1=squeeze(sum(p1,2)./(nens-1));
 sprd2=squeeze(sum(p2,2)./(nens-1));
 system(['mkdir -p ' workdir '/errspec/' expname]);
 save([workdir '/errspec/' expname '/' casename],'w','err1','err2','sprd1','sprd2')
-
-%end
 

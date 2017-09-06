@@ -33,7 +33,7 @@ for n=$n1:$n2
   zeta0=spec2grid(psi2zeta(psik));
   temp0=spec2grid(psi2temp(psik));
 
-  r=${err_slope:-1};
+  r=${err_slope:- 1};
   [kx,ky]=ndgrid(-$kmax:$kmax,0:$kmax);
   kk=sqrt(kx.^2+ky.^2);
   noise=(kk.^((r-1)/2)).*exp(2*pi*sqrt(-1)*rand(2*$kmax+1,$kmax+1));
@@ -61,8 +61,8 @@ for n=$n1:$n2
 
   f=fopen(['$obsdir/' sprintf('%5.5i',n)],'w');
   for z=1
-  for y=1:$ny
-  for x=1:$nx
+  for y=1:$obs_thin:$ny
+  for x=1:$obs_thin:$nx
     fprintf(f,'%7.2f %7.2f %5.2f %12.5f %12.5f %12.5f %12.5f %12.5f \n',x,y,z,...
            u(x,y,z),v(x,y,z),psi(x,y,z),zeta(x,y,z),temp(x,y,z));
   end 

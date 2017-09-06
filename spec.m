@@ -1,8 +1,8 @@
 addpath util
-workdir='/glade/scratch/mying/qgmodel_enkf/ctrl'
+workdir='/glade/scratch/mying/qgmodel_enkf/scale1'
 close all
 kmax=63; lv=1;
-n=1000;
+n=100;
 for i=1:n
   psik(:,:,:,i)=read_field([workdir '/truth/' sprintf('%5.5i',i)],2*kmax+1,kmax+1,lv,1);
 end 
@@ -15,7 +15,7 @@ for i=1:1:n
 end
 plotspec(w,squeeze(mean(p(:,1,:),3)),1.03,'k','-',2); hold on  %top is 1
 
-w1=[1:100]; loglog(w1,(6e2)*w1.^(-3),'color',[.7 .7 .7],'linewidth',2); text(30,0.06,'-3','color',[.7 .7 .7],'fontsize',20);
+%w1=[1:100]; loglog(w1,(6e2)*w1.^(-3),'color',[.7 .7 .7],'linewidth',2); text(30,0.06,'-3','color',[.7 .7 .7],'fontsize',20);
 
 set(gca,'fontsize',18)
 xlabel('wavenumber','fontsize',20)

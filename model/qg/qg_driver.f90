@@ -72,7 +72,6 @@ program qg_driver
   endif
   qbarx = shearv(1:nz)
   qbary = -shearu(1:nz) + beta            ! Mean PV gradient
-print*,shearu
   if (use_topo) then
      hb = Init_topo(topo_type,restarting) ! Read/create bottom topo
      toposhift = - i*ubar(nz)*(kx_*hb)- i*vbar(nz)*(ky_*hb)

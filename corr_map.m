@@ -6,7 +6,7 @@ close all
 getparams([workdir '/' expname '/truth']);
 
 thin=4;
-n1=1; nt=120;
+n1=1; nt=100;
 lv=1;
 krange=[1]; %[6 12 25]; %[1 4 10 32];
 
@@ -16,7 +16,7 @@ disp(n)
 for m=1:nens
 	psik=read_field([workdir '/' expname '/' casename '/' sprintf('%4.4i',m) '/f_' sprintf('%5.5i',n+n1-1)],nkx,nky,nz,1);
 	prior(:,:,:,m)=spec2grid(psik);
-	prior1(:,:,:,m)=spec2grid(psi2temp(psik));
+	prior1(:,:,:,m)=spec2grid(psi2u(psik));
 end
 prior(:,:,:,nens+1)=mean(prior(:,:,:,1:nens),4);
 prior1(:,:,:,nens+1)=mean(prior1(:,:,:,1:nens),4);

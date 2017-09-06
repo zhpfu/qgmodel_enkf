@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export CONFIG=/glade/p/work/mying/qgmodel_enkf/config/ctrl/noda
+export CONFIG=/glade/p/work/mying/qgmodel_enkf/config/scale2/noda
 . $CONFIG
 
 mkdir -p $workdir/$casename

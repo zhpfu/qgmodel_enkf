@@ -131,7 +131,7 @@ program enkf
   end do
   uf=u; umf=um !prior perturbation and mean
 
-  nobs=ceiling(real(nx)/ob_thin)*ceiling(real(ny)/ob_thin)*1*nv
+  nobs=nrec*nv
 
   !prior statistics in obs space
   allocate(obsv(nrec),yo(nobs),ya(nobs,nens+1),yb(nobs,nens+1))
@@ -185,19 +185,14 @@ program enkf
       end if
     end do
 
-    do k=1,1 
-    do j=1,ny,ob_thin
-    do i=1,nx,ob_thin
+    do p=1,nrec
       n=n+1
-      p=(k-1)*nx*ny+(j-1)*ny+i
       yo(n)=obsv(p)
       do m=1,nm
         ie=(m-1)*nprocs+proc_id+1
         if(ie<=nens) &
           call obs_interp(x,y,z,uobs(:,:,:,m),obs_x(p),obs_y(p),obs_z(p),yb(n,ie))
       end do
-    end do
-    end do
     end do
   end do
   call MPI_Allreduce(yb,yb,nobs*(nens+1),MPI_REAL8,MPI_SUM,comm,ierr)
@@ -220,7 +215,7 @@ program enkf
   end if
 
   !assimilation loop
-  do p=1,nobs
+  do p=1,nrec
 
     do v=1,nv !variable loop
 
@@ -385,18 +380,13 @@ program enkf
       end if
     end do
 
-    do k=1,1 
-    do j=1,ny,ob_thin
-    do i=1,nx,ob_thin
+    do p=1,nrec
       n=n+1
-      p=(k-1)*nx*ny+(j-1)*ny+i
       do m=1,nm
         ie=(m-1)*nprocs+proc_id+1
         if(ie<=nens) &
           call obs_interp(x,y,z,uobs(:,:,:,m),obs_x(p),obs_y(p),obs_z(p),ya(n,ie))
       end do
-    end do
-    end do
     end do
   end do
   call MPI_Allreduce(ya,ya,nobs*(nens+1),MPI_REAL8,MPI_SUM,comm,ierr)

@@ -1,7 +1,7 @@
 #!/bin/bash
 #BSUB -P UPSU0001
 #BSUB -J run_truth
-#BSUB -W 1:00
+#BSUB -W 2:00
 #BSUB -q small
 #BSUB -n 1
 #BSUB -R "span[ptile=1]"
@@ -9,7 +9,7 @@
 source /glade/u/apps/opt/lmod/4.2.1/init/bash
 source ~/.bashrc
 
-export CONFIG=/glade/p/work/mying/qgmodel_enkf/config/ctrl/noda
+export CONFIG=/glade/p/work/mying/qgmodel_enkf/config/scale2/noda
 . $CONFIG
 
 mkdir -p $workdir/truth

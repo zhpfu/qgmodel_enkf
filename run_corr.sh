@@ -1,6 +1,6 @@
 #!/bin/bash
 #BSUB -P UPSU0001
-#BSUB -J run_cycle 
+#BSUB -J corr 
 #BSUB -W 2:00
 #BSUB -q small
 #BSUB -n 1

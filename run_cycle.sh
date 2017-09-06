@@ -1,15 +1,15 @@
 #!/bin/bash
 #BSUB -P UPSU0001
 #BSUB -J run_cycle 
-#BSUB -W 0:30
-#BSUB -q regular 
-#BSUB -n 40
+#BSUB -W 2:00
+#BSUB -q small 
+#BSUB -n 32
 #BSUB -R "span[ptile=16]"
 #BSUB -o log
 source /glade/u/apps/opt/lmod/4.2.1/init/bash
 source ~/.bashrc
 
-export CONFIG=/glade/p/work/mying/qgmodel_enkf/config/test/test3
+export CONFIG=/glade/p/work/mying/qgmodel_enkf/config/ctrl/sl64
 . $CONFIG
 
 mkdir -p $workdir/$casename
@@ -66,7 +66,7 @@ for m in \$(seq $m1 $m2); do
   cd \$(printf %4.4i \$m)
   rm -f output.bin
   cp -L `printf %5.5i $n`.bin input.bin
-  for i in 1 2 5; do
+  for i in 3 10; do
     rm -f restart.nml
     $homedir/namelist_input.sh 0 \$i > input.nml
     $codedir/$qgexe >& /dev/null

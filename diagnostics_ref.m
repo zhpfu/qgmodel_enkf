@@ -1,14 +1,11 @@
 %clear all
 addpath /glade/p/work/mying/qgmodel_enkf/util
 addpath /glade/p/work/mying/graphics
-workdir='/glade/scratch/mying/qgmodel_enkf/';
+workdir='/glade/scratch/mying/qgmodel_enkf';
 %expname=
 %nens=40;
-
 %obs_thin=8; 
-%if(run==1); obs_thin=4; end
-%if(run==2); obs_thin=4; end
-%if(run==3); obs_thin=1; end
+%n1=1; nt=20;
 
 getparams([workdir '/' expname '/truth']);
 
@@ -16,11 +13,8 @@ getparams([workdir '/' expname '/truth']);
 lv=1;
 iind=1:obs_thin:nx; jind=1:obs_thin:ny;
 
-%nt=21;
-%n1=1; %nt-20;
-for n=1:nt-n1+1
-n
-  nid=sprintf('%5.5i',n+n1-1);
+for n=1:floor((nt-n1)/dt)+1
+  nid=sprintf('%5.5i',n1+(n-1)*dt)
   psik=read_field([workdir '/' expname '/truth/' nid],nkx,nky,nz,1);
   ut(:,:,n)=spec2grid(psi2u(psik(:,:,lv)));
   vt(:,:,n)=spec2grid(psi2v(psik(:,:,lv)));
@@ -42,12 +36,12 @@ n
 	obsverr(:,:,n)=obsv(iind,jind,n)-interpn(x,y,vt(:,:,n),obs_x(iind,jind),obs_y(iind,jind));
 end
 
-	%out(:,:,1,:)=squeeze(mean(u1,3));
-	%out(:,:,2,:)=obsu;
-	%out(:,:,3,:)=ut;
-	%system(['mkdir -p ' workdir '/' expname]);
-	%system(['rm -f ' workdir '/' expname '/noda.nc']);
-	%nc_write([workdir '/' expname '/noda.nc'],'var',{'x','y','z','case','t'},out);
+%out(:,:,1,:)=squeeze(mean(u1,3));
+%out(:,:,2,:)=obsu;
+%out(:,:,3,:)=ut;
+%system(['mkdir -p ' workdir '/' expname]);
+%system(['rm -f ' workdir '/' expname '/noda.nc']);
+%nc_write([workdir '/' expname '/noda.nc'],'var',{'x','y','z','case','t'},out);
 
 %error spectra
 [w ref]=KEspec(ut,vt);
