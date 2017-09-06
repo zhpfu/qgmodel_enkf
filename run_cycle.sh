@@ -66,7 +66,7 @@ for m in \$(seq $m1 $m2); do
   cd \$(printf %4.4i \$m)
   rm -f output.bin
   cp -L `printf %5.5i $n`.bin input.bin
-  for i in 3 10; do
+  for i in 1 2 10; do
     rm -f restart.nml
     $homedir/namelist_input.sh 0 \$i > input.nml
     $codedir/$qgexe >& /dev/null
