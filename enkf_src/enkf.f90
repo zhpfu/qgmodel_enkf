@@ -12,7 +12,7 @@ program enkf
   implicit none
 
   integer :: nt,fin,iock
-  integer :: m,n,p,r,s,i,j,k,k1,nx,ny,nkx,nky,ns,nm,ie,v,nv,nobs
+  integer :: m,n,p,q,r,s,i,j,k,k1,nx,ny,nkx,nky,ns,nm,ie,v,nv,nobs
   character(256) :: arg,workdir,obsdir,nmlfile,infile,outfile,obfile
 
   real :: innov,varb,varo,norm,alpha
@@ -30,7 +30,7 @@ program enkf
   real :: ob_err,obs_val,relax_coef,inflate_coef
   logical :: debug,relax_adapt,inflate_adapt,use_aoei
   integer,dimension(50) :: krange,localize_cutoff,ob_type
-  integer,allocatable,dimension(:) :: kr,roi,obt
+  integer,allocatable,dimension(:) :: kr,roi,obt,ind
 
   namelist/enkf_param/kmax,nz,nens,localize_opt,localize_cutoff,krange,find_roi,&
                       ob_thin,ob_err,ob_type,state_type, &
@@ -214,8 +214,16 @@ program enkf
       call find_optimal_roi_chi(nens,u,kr,roi)
   end if
 
+  !sort the observation into ordered sequence
+  allocate(ind(nrec))
+  if(proc_id==0) then
+    call quicksort(nrec,floor(obs_y/ob_thin)*ob_thin*nx+obs_x,ind)
+  endif
+  call MPI_Bcast(ind,nrec,MPI_INTEGER,0,comm,ierr)
+
   !assimilation loop
-  do p=1,nrec
+  do q=1,nrec
+    p=ind(q)
 
     do v=1,nv !variable loop
 
