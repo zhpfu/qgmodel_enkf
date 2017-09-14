@@ -18,13 +18,13 @@ filt_tune=1
 k_cut=40
 bot_drag=9
 
-frame_per_cycle=20
+frame_per_cycle=100
 spinup_cycle=0
 obs_interval=1
 num_cycle=500
 
 run_enkf=false
-nens=256
+nens=40
 obs_err=4.5
 obs_thin=2
 obs_type=1,2

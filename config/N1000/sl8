@@ -1,33 +1,34 @@
 homedir=/glade/p/work/mying/qgmodel_enkf
-workdir=/glade/scratch/mying/qgmodel_enkf/thin1
+workdir=/glade/scratch/mying/qgmodel_enkf/N1000
 
 codedir=$homedir/model/qg
 qgexe=qg.exe
 
-kmax=49
+kmax=63
 nz=2
 dt=0.0005
 F=100
-beta=32
+beta=16
 strat_type=linear
 ubar_type=linear
-uscale=0.22
+uscale=0.2
 filter_type=exp_cutoff
 filter_exp=8
 filt_tune=1
-k_cut=33
-bot_drag=0.2
+k_cut=40
+bot_drag=0.5
 
-frame_per_cycle=200
-spinup_cycle=0
+frame_per_cycle=100
+spinup_cycle=20
 obs_interval=1
 num_cycle=500
 
 run_enkf=true
-nens=40
-obs_err=2
-obs_thin=1
+nens=1000
+obs_err=4.5
+obs_thin=2
 obs_type=1,2
+state_type=3
 localize=1
 localize_cutoff=8
 krange=1

@@ -135,6 +135,7 @@ program enkf
 
   !prior statistics in obs space
   allocate(obsv(nrec),yo(nobs),ya(nobs,nens+1),yb(nobs,nens+1))
+  ya=0.0; yb=0.0
   n=0
   do v=1,nv
     select case (obt(v))
