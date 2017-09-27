@@ -2,12 +2,12 @@
 addpath /glade/p/work/mying/qgmodel_enkf/util
 addpath /glade/p/work/mying/graphics
 workdir='/glade/scratch/mying/qgmodel_enkf';
-expname='ctrl';
-casename='sl16';
-nens=32;
+expname='randloc';
+casename='sl32';
+nens=64;
+n1=21; nt=22; dt=1;
 
 getparams([workdir '/' expname '/truth']);
-n1=51; nt=100; dt=10;
 for n=1:floor((nt-n1)/dt)+1
   nid=sprintf('%5.5i',n1+(n-1)*dt);
   psik=read_field([workdir '/' expname '/truth/' nid],nkx,nky,nz,1);
@@ -34,9 +34,9 @@ end
 	nc_write([workdir '/' expname '/' casename '/psi.nc'],'psi0',{'x','y','z','t'},psi0);
 	nc_write([workdir '/' expname '/' casename '/psi.nc'],'psi1',{'x','y','z','m','t'},psi1);
 	nc_write([workdir '/' expname '/' casename '/psi.nc'],'psi2',{'x','y','z','m','t'},psi2);
-	nc_write([workdir '/' expname '/' casename '/zeta.nc'],'zeta0',{'x','y','z','t'},zeta0);
-	nc_write([workdir '/' expname '/' casename '/zeta.nc'],'zeta1',{'x','y','z','m','t'},zeta1);
-	nc_write([workdir '/' expname '/' casename '/zeta.nc'],'zeta2',{'x','y','z','m','t'},zeta2);
+	nc_write([workdir '/' expname '/' casename '/temp.nc'],'temp0',{'x','y','z','t'},temp0);
+	nc_write([workdir '/' expname '/' casename '/temp.nc'],'temp1',{'x','y','z','m','t'},temp1);
+	nc_write([workdir '/' expname '/' casename '/temp.nc'],'temp2',{'x','y','z','m','t'},temp2);
 	nc_write([workdir '/' expname '/' casename '/u.nc'],'u0',{'x','y','z','t'},u0);
 	nc_write([workdir '/' expname '/' casename '/u.nc'],'u1',{'x','y','z','m','t'},u1);
 	nc_write([workdir '/' expname '/' casename '/u.nc'],'u2',{'x','y','z','m','t'},u2);

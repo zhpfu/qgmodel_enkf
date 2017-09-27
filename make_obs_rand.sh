@@ -1,5 +1,5 @@
 #!/bin/bash
-export CONFIG=/glade/p/work/mying/qgmodel_enkf/config/ctrl/noda
+export CONFIG=/glade/p/work/mying/qgmodel_enkf/config/$1/noda
 . $CONFIG
 
 nkx=`echo "$kmax*2+1" |bc`
@@ -12,7 +12,7 @@ obsdir=$workdir/obs_rand
 mkdir -p $obsdir
 rm -f $obsdir/*
 
-n=20  #batch of obs run in matlab job
+n=5  #batch of obs run in matlab job
 for i in `seq 1 $n`; do
 
 nn=`echo "$num_cycle/$n" |bc`
@@ -34,11 +34,11 @@ for n=$n1:$n2
   temp0=spec2grid(psi2temp(psik));
 
   [x y z]=ndgrid(1:$nx,1:$ny,1:$nz);
-  nobs=($nx/$obs_thin)*($ny/$obs_thin);
+  nobs=ceil($nx/$obs_thin)*ceil($ny/$obs_thin);
   xo=rand(1,nobs)*($nx-1)+1;
   yo=rand(1,nobs)*($ny-1)+1;
   zo=ones(1,nobs);
-  uv_err=4.5; temp_err=4.5; psi_err=0.2; zeta_err=230;
+  uv_err=$obs_err; temp_err=$obs_err; psi_err=0.2; zeta_err=230;
  
   u=interpn(x,y,z,u0,xo,yo,zo)+randn(1,nobs)*uv_err;
   v=interpn(x,y,z,v0,xo,yo,zo)+randn(1,nobs)*uv_err;

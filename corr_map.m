@@ -5,16 +5,18 @@ workdir='/glade/scratch/mying/qgmodel_enkf';
 close all
 getparams([workdir '/' expname '/truth']);
 
-thin=4;
-n1=1; nt=100;
-lv=1;
-krange=[1]; %[6 12 25]; %[1 4 10 32];
+system(['mkdir -p ' workdir '/mcorr/' expname])
 
-for n=1:10:nt-n1+1
-disp(n)
+thin=3;
+n1=1; nt=30; dt=1;
+lv=1;
+krange=1; %[0 5 21]; 
+
+for n=1:floor((nt-n1)/dt)+1
+nid=sprintf('%5.5i',n1+(n-1)*dt)
 
 for m=1:nens
-	psik=read_field([workdir '/' expname '/' casename '/' sprintf('%4.4i',m) '/f_' sprintf('%5.5i',n+n1-1)],nkx,nky,nz,1);
+	psik=read_field([workdir '/' expname '/' casename '/' sprintf('%4.4i',m) '/f_' nid],nkx,nky,nz,1);
 	prior(:,:,:,m)=spec2grid(psik);
 	prior1(:,:,:,m)=spec2grid(psi2u(psik));
 end
@@ -63,10 +65,6 @@ for s=1:length(krange);
 	%set(gca,'XTickLabel',[],'YTickLabel',[])
 
 	for l=0:nx/2
-		%tmp=corr(dist>=l & dist<l+1);
-		%ntmp=length(tmp(:));
-		%corrsamp(corrcount(s,l)+(1:ntmp),s,l)=tmp(:);
-		%corrcount(s,l)=corrcount(s,l)+ntmp;
 		mcorr(n,c,s,l+1)=mean(abs(corr(dist>=l & dist<l+1)));
 	end
 end %s
@@ -74,22 +72,6 @@ end %s
 end %j
 end %i
 
-%cmap=colormap(jet(length(krange)));
-%cmap=colormap(jet(nt-n1+1));
-%for k=1:length(krange)
-	%plot(squeeze(mean(mcorr(:,s,:),1))','color',0.8*cmap(n-n1+1,:)); hold on
-	%%plot(1:120,smooth_1d(sqrt(mean(SE(:,k,:),1)),2),'color',cmap(k,:)); hold on 
-	%%plot([60 80],[1 1]*(0.15-k*0.02),'color',cmap(k,:));
-%end
-%plot(squeeze(mean(mcorr(:,1,:),1)),'k')
-%xlabel('distance','fontsize',15)
-%ylabel('mean absolute correlation','fontsize',15)
-
-end %n
-
-system(['mkdir -p ' workdir '/mcorr/' expname])
 save([workdir '/mcorr/' expname '/' casename],'mcorr','-v7.3')
-
-%saveas(gca,'1','pdf')
-%system('scp 1.pdf yxy159@192.5.158.32:~/html/.')
+end %n
 

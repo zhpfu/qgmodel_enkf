@@ -1,5 +1,5 @@
 #!/bin/bash
-export CONFIG=/glade/p/work/mying/qgmodel_enkf/config/ctrl/noda
+export CONFIG=/glade/p/work/mying/qgmodel_enkf/config/$1/noda
 . $CONFIG
 
 nkx=`echo "$kmax*2+1" |bc`
@@ -12,7 +12,7 @@ obsdir=$workdir/obs
 mkdir -p $obsdir
 rm -f $obsdir/*
 
-n=20  #batch of obs run in matlab job
+n=5  #batch of obs run in matlab job
 for i in `seq 1 $n`; do
 
 nn=`echo "$num_cycle/$n" |bc`

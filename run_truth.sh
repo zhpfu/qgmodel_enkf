@@ -9,7 +9,7 @@
 source /glade/u/apps/opt/lmod/4.2.1/init/bash
 source ~/.bashrc
 
-export CONFIG=/glade/p/work/mying/qgmodel_enkf/config/scale2/noda
+export CONFIG=/glade/p/work/mying/qgmodel_enkf/config/$1/noda
 . $CONFIG
 
 mkdir -p $workdir/truth

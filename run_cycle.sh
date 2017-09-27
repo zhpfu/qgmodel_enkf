@@ -1,16 +1,17 @@
 #!/bin/bash
-#BSUB -P UPSU0001
-#BSUB -J run_cycle 
-#BSUB -W 2:00
-#BSUB -q small 
-#BSUB -n 32
-#BSUB -R "span[ptile=16]"
-#BSUB -o log
 source /glade/u/apps/opt/lmod/4.2.1/init/bash
 source ~/.bashrc
 
-export CONFIG=/glade/p/work/mying/qgmodel_enkf/config/ctrl/sl64
+export CONFIG=/glade/p/work/mying/qgmodel_enkf/config/$1
 . $CONFIG
+
+if [ $casename == "sl" ]; then
+  export localize_cutoff=$2
+  export casename="sl$localize_cutoff"
+  if [ $localize_cutoff -eq 256 ]; then
+    export localize=0
+  fi
+fi
 
 mkdir -p $workdir/$casename
 cd $workdir/$casename
@@ -33,7 +34,7 @@ current_cycle=`cat current_cycle`
 for n in `seq $current_cycle $num_cycle`; do
 echo $n
   if $run_enkf && [ $n -gt $spinup_cycle ] && [ $(((n+$obs_interval-1)%$obs_interval)) -eq 0 ]; then 
-		$homedir/enkf.sh $n
+		$homedir/enkf.sh $n $localize_cutoff
 		for m in `seq 1 $nens`; do 
 			mem=`printf %4.4i $m`
 			if [ ! -f $mem/`printf %5.5i $n`.bin ]; then 
@@ -66,7 +67,7 @@ for m in \$(seq $m1 $m2); do
   cd \$(printf %4.4i \$m)
   rm -f output.bin
   cp -L `printf %5.5i $n`.bin input.bin
-  for i in 1 2 10; do
+  for i in 1 10; do
     rm -f restart.nml
     $homedir/namelist_input.sh 0 \$i > input.nml
     $codedir/$qgexe >& /dev/null

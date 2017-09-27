@@ -1,67 +1,46 @@
 %clear all
 addpath /glade/p/work/mying/qgmodel_enkf/util
-addpath /glade/p/work/mying/graphics
 workdir='/glade/scratch/mying/qgmodel_enkf';
 %expname=
-%nens=40;
-%obs_thin=8; 
 %n1=1; nt=20;
 
 getparams([workdir '/' expname '/truth']);
 
 [x y]=ndgrid(1:nx,1:ny);
 lv=1;
-iind=1:obs_thin:nx; jind=1:obs_thin:ny;
 
 for n=1:floor((nt-n1)/dt)+1
   nid=sprintf('%5.5i',n1+(n-1)*dt)
   psik=read_field([workdir '/' expname '/truth/' nid],nkx,nky,nz,1);
-  ut(:,:,n)=spec2grid(psi2u(psik(:,:,lv)));
-  vt(:,:,n)=spec2grid(psi2v(psik(:,:,lv)));
-  
-	for m=1:nens
-		psik1=read_field([workdir '/' expname '/noda/' sprintf('%4.4i',m) '/f_' nid],nkx,nky,nz,1);
-		psik2=read_field([workdir '/' expname '/noda/' sprintf('%4.4i',m) '/f_' nid],nkx,nky,nz,1);
-		u1(:,:,m,n)=spec2grid(psi2u(psik1(:,:,lv)));
-		v1(:,:,m,n)=spec2grid(psi2v(psik1(:,:,lv)));
-		u2(:,:,m,n)=spec2grid(psi2u(psik2(:,:,lv)));
-		v2(:,:,m,n)=spec2grid(psi2v(psik2(:,:,lv)));
-	end
-	a=textread([workdir '/' expname '/obs/' nid]);
-	obs_x=reshape(a(:,1),[nx ny]);
-	obs_y=reshape(a(:,2),[nx ny]); 
-	obsu(:,:,n)=reshape(a(:,4),[nx ny]);
-	obsv(:,:,n)=reshape(a(:,5),[nx ny]);
-	obsuerr(:,:,n)=obsu(iind,jind,n)-interpn(x,y,ut(:,:,n),obs_x(iind,jind),obs_y(iind,jind));
-	obsverr(:,:,n)=obsv(iind,jind,n)-interpn(x,y,vt(:,:,n),obs_x(iind,jind),obs_y(iind,jind));
+  ut(:,:,:,n)=spec2grid(psi2u(psik));
 end
-
-%out(:,:,1,:)=squeeze(mean(u1,3));
-%out(:,:,2,:)=obsu;
-%out(:,:,3,:)=ut;
-%system(['mkdir -p ' workdir '/' expname]);
-%system(['rm -f ' workdir '/' expname '/noda.nc']);
-%nc_write([workdir '/' expname '/noda.nc'],'var',{'x','y','z','case','t'},out);
-
-%error spectra
-[w ref]=KEspec(ut,vt);
-[w1 oberr]=KEspec(obsuerr,obsverr);
-u1mean=mean(u1,3);
-v1mean=mean(v1,3);
-u2mean=mean(u2,3);
-v2mean=mean(v2,3);
-for m=1:nens
-	u1(:,:,m,:)=u1(:,:,m,:)-u1mean;
-	v1(:,:,m,:)=v1(:,:,m,:)-v1mean;
-	u2(:,:,m,:)=u2(:,:,m,:)-u2mean;
-	v2(:,:,m,:)=v2(:,:,m,:)-v2mean;
-end
-[w err1]=KEspec(squeeze(u1mean)-ut,squeeze(v1mean)-vt);
-[w err2]=KEspec(squeeze(u2mean)-ut,squeeze(v2mean)-vt);
-[w p1]=KEspec(u1,v1);
-[w p2]=KEspec(u2,v2);
-sprd1=squeeze(sum(p1,2)./(nens-1));
-sprd2=squeeze(sum(p2,2)./(nens-1));
+[w ref]=pwrspec2d(ut);
 system(['mkdir -p ' workdir '/errspec/' expname]);
-save([workdir '/errspec/' expname '/noda'],'w','w1','ref','oberr','err1','err2','sprd1','sprd2')
+save([workdir '/errspec/' expname '/ref_u'],'w','ref')
 
+for n=1:floor((nt-n1)/dt)+1
+  nid=sprintf('%5.5i',n1+(n-1)*dt)
+  psik=read_field([workdir '/' expname '/truth/' nid],nkx,nky,nz,1);
+  ut(:,:,:,n)=spec2grid(psi2v(psik));
+end
+[w ref]=pwrspec2d(ut);
+system(['mkdir -p ' workdir '/errspec/' expname]);
+save([workdir '/errspec/' expname '/ref_v'],'w','ref')
+
+for n=1:floor((nt-n1)/dt)+1
+  nid=sprintf('%5.5i',n1+(n-1)*dt)
+  psik=read_field([workdir '/' expname '/truth/' nid],nkx,nky,nz,1);
+  ut(:,:,:,n)=spec2grid((psik));
+end
+[w ref]=pwrspec2d(ut);
+system(['mkdir -p ' workdir '/errspec/' expname]);
+save([workdir '/errspec/' expname '/ref_psi'],'w','ref')
+
+for n=1:floor((nt-n1)/dt)+1
+  nid=sprintf('%5.5i',n1+(n-1)*dt)
+  psik=read_field([workdir '/' expname '/truth/' nid],nkx,nky,nz,1);
+  ut(:,:,:,n)=spec2grid(psi2temp(psik));
+end
+[w ref]=pwrspec2d(ut);
+system(['mkdir -p ' workdir '/errspec/' expname]);
+save([workdir '/errspec/' expname '/ref_temp'],'w','ref')
