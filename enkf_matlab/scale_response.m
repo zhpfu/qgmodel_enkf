@@ -9,6 +9,26 @@ end
 
 r=zeros(size(k));
 
+if(band==nk)
+  r(k>=krange(band))=1.0;
+else
+  r(k>=krange(band) & k<krange(band+1)) = 1.0;
+end
+
+end
+
+
+function r = scale_response1(k,krange,band)
+
+nk=length(krange);
+
+if(band<1 | band>nk)
+  disp('band not within range!')
+  exit
+end
+
+r=zeros(size(k));
+
 center_k=krange(band);
 if(band==1)
   r(k<=center_k)=1.0;

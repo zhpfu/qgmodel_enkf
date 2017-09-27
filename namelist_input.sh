@@ -1,5 +1,6 @@
 #!/bin/bash
 . $CONFIG
+
 idum=$1
 dtfac=${2:-1}
 

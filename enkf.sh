@@ -2,6 +2,15 @@
 . $CONFIG
 
 n=$1
+
+if [ $casename == "sl" ]; then
+  export localize_cutoff=$2
+  export casename="sl$localize_cutoff"
+  if [ $localize_cutoff -eq 256 ]; then
+    export localize=0
+  fi
+fi
+
 cd $workdir/$casename
 
 nt=16
@@ -18,21 +27,21 @@ cat > param.in << EOF
  kmax=$kmax
  nz=$nz
  nens=$nens
- ob_thin=${obs_thin:-2}
- ob_err=${obs_err:-3}
- ob_type=${obs_type:-1,2}
+ ob_thin=${obs_thin:-3}
+ ob_err=${obs_err:-2}
+ ob_type=${obs_type:-5}
  state_type=${state_type:-3}
  krange=${krange:-1}
- localize_opt=${localize:-1}
- localize_cutoff=${localize_cutoff:-16}
+ localize_opt=${localize:-0}
+ localize_cutoff=`echo "${localize_cutoff}/${localize_factor:-1}" |bc -l`
  find_roi=${find_roi:-1}
  inflate_adapt=${inflate_adapt:- F}
  inflate_coef=${inflate_coef:-1}
  use_aoei=${use_aoei:- F}
- relax_opt=${relax_opt:-0}
- relax_adapt=${relax_adapt:- F}
- relax_coef=${relax_coef:-0}
- debug=${debug:- T}
+ relax_opt=${relax_opt:-2}
+ relax_adapt=${relax_adapt:- T}
+ relax_coef=${relax_coef:-0.5}
+ debug=${debug:- F}
 /
 EOF
 
