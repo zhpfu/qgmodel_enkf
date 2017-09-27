@@ -22,18 +22,18 @@ spinup_cycle=0
 obs_interval=1
 num_cycle=300
 
-run_enkf=false
+run_enkf=true
 nens=64
 obs_err=3
 obs_thin=3
 obs_type=5
 state_type=3
 krange=1
-localize=0
+localize=1
 relax_opt=2
 relax_adapt=T
 
-casename=noda
+casename=sl
 
 ml='matlab -nodesktop -nosplash -nodisplay <'
 workdir=/glade/scratch/mying/qgmodel_enkf/scale2
