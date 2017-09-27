@@ -287,7 +287,7 @@ program enkf
 
       innov=obs_val-hu(nens+1)
       if(abs(innov)>(5*ob_err)) then
-        if(proc_id==0) print *,'kick off'
+        if(debug .and. proc_id==0) print *,'kick off'
         cycle
       end if
 
